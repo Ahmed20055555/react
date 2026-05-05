@@ -12,7 +12,7 @@ import { FaUser } from "react-icons/fa";
 const Header = () => {
 
   const { theme, toggolemode, profile, setProfile } = useContext(ThemeContexttt);
-  const [user] = useAuthState(auth);
+  const [user , loading , error] = useAuthState(auth);
 
   function signout() {
     signOut(auth).then(() => {
@@ -22,6 +22,11 @@ const Header = () => {
     });
   }
 
+
+if (loading) {
+  return <p>loading...</p>
+}
+  
   return (
     <div >
 
@@ -38,19 +43,14 @@ const Header = () => {
 
         <ul className="main-ul" >
 
-          {user &&
+          {user && user?.emailVerified &&
             <>
               <li className="main-list">
-                <NavLink className="main-link" to="/html">
-                  HTML
+                <NavLink className="main-link" to="/About">
+                  About
                 </NavLink>
               </li>
 
-              <li className="main-list">
-                <NavLink className="main-link" to="/javascript">
-                  JavaScript
-                </NavLink>
-              </li>
 
               <li className="main-list">
                 <NavLink className="main-link" to="/profile">
@@ -71,12 +71,12 @@ const Header = () => {
                 </NavLink>
               </li>
 
-  
+
             </>
           }
 
           {
-            !user &&
+             !user?.emailVerified &&
             <>
               <li className="main-list">
                 <NavLink className="main-link" to="/signin">
@@ -93,10 +93,7 @@ const Header = () => {
 
         </ul>
 
-
       </header>
-
-
 
 
       <header style={{ backgroundColor: "red" }} className="show-when-mobile">
@@ -167,8 +164,11 @@ const Header = () => {
           </div>
         </div>
       </header>
+
     </div>
   );
+
+
 };
 
 export default Header;

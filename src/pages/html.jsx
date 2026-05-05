@@ -8,21 +8,21 @@ import { Helmet } from 'react-helmet-async';
 
 
 
-const Html = () => {
+const About = () => {
 
   return (
     <>
 
       <Helmet>
-        <title>HTML Page</title>
-        <meta name="description" content="HTML Page" />
+        <title>About Page</title>
+        <meta name="description" content="About Page" />
       </Helmet>
 
       <Header />
-      <MainContent pageName="HTML Page" />
+      <MainContent pageName="About Page" />
       <Footer />
     </>
   );
 }
 
-export default Html;
+export default About;

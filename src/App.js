@@ -1,8 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/home";
-import HTML from "./pages/html";
 import Css from "./pages/css";
-import Javascript from "./pages/javascript";
 import { useContext } from "react";
 import ThemeContexttt from "./Datacontext";
 import Signin from "./pages/signin"
@@ -11,6 +9,7 @@ import { UserData } from "./comp/userdata";
 import { auth } from "./firebase/config";
 import { SucssusSignin } from "./comp/sucssus-signin";
 import Profile from "./pages/profile";
+import About from "./pages/html";
 
 
 function App() {
@@ -21,13 +20,13 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <SucssusSignin>  <Home /> </SucssusSignin>,
+      element: <Home />,
       errorElement: <h1>SORROY.........</h1>,
     },
 
     {
-      path: "/html",
-      element: <SucssusSignin> <HTML /> </SucssusSignin>,
+      path: "/About",
+      element: <SucssusSignin> <About /> </SucssusSignin>,
     },
 
     {
@@ -35,10 +34,6 @@ function App() {
       element: <SucssusSignin> <Css /> </SucssusSignin>,
     },
 
-    {
-      path: "/javascript",
-      element: <SucssusSignin> <Javascript /> </SucssusSignin>,
-    },
 
     {
       path: "/profile",
@@ -60,7 +55,7 @@ function App() {
 
 
   return <div className={`${theme}`} >
-    <RouterProvider router={router} />;
+    <RouterProvider router={router} />
     <UserData auth={auth} />
   </div>
 

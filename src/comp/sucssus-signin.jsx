@@ -9,5 +9,5 @@ export function SucssusSignin({ children }) {
 
    const [user] = useAuthState(auth);
 
-    return user ? children :  navigate("/Signin");
+    return user && user.emailVerified ? children :  navigate("/Signup");
 }

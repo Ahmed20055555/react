@@ -4,10 +4,12 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { auth } from '../firebase/config';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FaTimes } from "react-icons/fa";
+
 
 const Signin = () => {
 
@@ -22,6 +24,8 @@ const Signin = () => {
     });
 
     const [firebaseError, setFirebaseError] = useState("");
+    const [showFormReset, setShowFormReset] = useState(false);
+
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
@@ -68,6 +72,20 @@ const Signin = () => {
             });
     }
 
+    const handleSendReset = (data) => {
+        console.log(data);
+        sendPasswordResetEmail(auth, data.email)
+        .then(() => {
+            console.log("Email sent successfully");
+            setShowFormReset(false);
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+        });
+    }
+
     return (
         <>
             <Helmet>
@@ -77,14 +95,28 @@ const Signin = () => {
             <Header />
 
             <main>
-                <form onSubmit={handleSubmit(onSubmit)}>
+
+                {showFormReset ?
+                    <form className='form_reset' onSubmit={handleSubmit(handleSendReset)}>
+                        <FaTimes onClick={() => setShowFormReset(false)} className='fa-times' />
+                        <p className='form_label' >forget email ?</p>
+                        <input className='form_input'  {...register("email")} type="text" placeholder='enter your email' />
+                        {errors.email && <p className='error'>{errors.email.message}</p>}
+                        <button className='form_button'>send</button>
+                    </form> : null}
+
+
+                <form onSubmit={handleSubmit(onSubmit)} >
                     <input placeholder='email :'  {...register("email")} type="text" />
                     {errors.email && <p className='error'>{errors.email.message}</p>}
                     <input placeholder='password :'  {...register("password")} type="password" />
                     {errors.password && <p className='error'>{errors.password.message}</p>}
                     {firebaseError && <p className="error">{firebaseError}</p>}
                     <button type="submit">  Send </button>
-                    <p className='Dontaccount' > Don't have an account? <Link to="/signup">Sign up</Link> </p>
+                    <div className="form-footer">
+                        <p className='Dontaccount' > Don't have an account? <Link to="/signup">Sign up</Link> </p>
+                        <p className='forget_password'  onClick={() => setShowFormReset(!showFormReset)} > forget password ? </p>
+                    </div>
                 </form>
             </main>
 

@@ -7,7 +7,7 @@ import { auth } from '../firebase/config';
 import { useForm } from 'react-hook-form';
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { updateProfile } from "firebase/auth";
 
 
@@ -24,6 +24,7 @@ const Signup = () => {
             .string()
             .min(6, "Password must be at least 6 characters"),
     })
+
     const [firebaseError, setFirebaseError] = useState("");
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(schema),
@@ -61,7 +62,12 @@ const Signup = () => {
                     displayName: data.username,
                     photoURL: image ? URL.createObjectURL(image) : null
                 }).then(() => {
+                    sendEmailVerification(auth.currentUser)
+                        .then(() => {
 
+                            console.log("Email verification sent!");
+                            navigate("/");
+                        });
                     const user = userCredential.user;
                     console.log("user .. ", user);
                     console.log("done");
